@@ -1,21 +1,18 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
+const { execSync } = require("child_process");
 
 const app = express();
 
 const PORT = process.env.PORT || 8080;
 
-console.log("Diretório atual:", __dirname);
-console.log("Arquivos na raiz:");
+console.log("Gerando build do frontend...");
 
-console.log(fs.readdirSync(__dirname));
+execSync("npm run build", {
+    stdio: "inherit"
+});
 
-console.log("Dist existe:", fs.existsSync(path.join(__dirname, "dist")));
-console.log(
-    "Index existe:",
-    fs.existsSync(path.join(__dirname, "dist", "index.html"))
-);
+console.log("Build concluído.");
 
 app.use(express.static(path.join(__dirname, "dist")));
 
@@ -26,21 +23,3 @@ app.use((req, res) => {
 app.listen(PORT, () => {
     console.log(`Frontend rodando na porta ${PORT}`);
 });
-
-console.log("Diretório atual:", __dirname);
-
-console.log("Arquivos na raiz:");
-console.log(fs.readdirSync(__dirname));
-
-console.log("Arquivos dentro de dist:");
-console.log(fs.readdirSync(path.join(__dirname, "dist")));
-
-console.log(
-    "Dist existe:",
-    fs.existsSync(path.join(__dirname, "dist"))
-);
-
-console.log(
-    "Index existe:",
-    fs.existsSync(path.join(__dirname, "dist", "index.html"))
-);
